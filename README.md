@@ -21,6 +21,42 @@
 - To use Local Ota to flash your M5Stack
   + The M5Stack must be connected to the same network as your PC
   + In the project "platformio.ini" file set "upload_port = [your M5StackIP]"
+### Secondly you must make changes to the software to make it work in the current version
+Changes needed to get repository to work
+- Delete WpsConnect.Cpp
+- Delete AudioOutputI2S.cpp
+
+#### File Modifications:
+##### Mp3Player.h:
+- Remove Ln 38: AudioOutputI2S *out;
+##### Mp3Player.cpp:
+- Remove Ln 13: out->SetGain(volume);
+- Remove Ln 101: out = new AudioOutputI2S(0, 1);
+- Remove Ln 103: out->SetChannels(2);
+- Remove Ln 104: mp3->begin(file, out);
+- Remove Ln 147: out->stop();
+- Remove Ln 150: out = NULL;
+- Remove Ln 153: delete out;
+##### WebRadio.h
+- Remove Ln 18: AudioOutputI2S *out = NULL;
+##### WebRadio.cpp
+- Remove Ln 13: out->SetGain(volume);
+- Remove Ln 98: out = new AudioOutputI2S(0, 1, 32);
+- Remove Ln 169: player->begin(buff, out);
+- Remove: Ln 202 - 207: 
+	if (out)
+	{
+		out->stop();
+		delete out;
+		out = NULL;
+	}
+##### WifiSettings.cpp
+- Remove Ln 135: Wps_run(true);
+- Remove Ln 142: Wps_run(false);
+
+##### Main.Cpp
+- Remove Ln 33: M5m.addMenuItem(1, "WEBRADIO", "<", "OK", ">", -1, WebRadio, appWebRadio);
+- Remove Ln 42: M5m.addMenuItem(2, "WIFI CONNECTION", "<", "OK", ">", -1, WifiConn, appWiFiSetup);
 
 ## The project include:
 - Applications
